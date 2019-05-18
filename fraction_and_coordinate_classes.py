@@ -1,3 +1,6 @@
+# From MIT OpenCourseware
+# Lecturer/Professor : Ana Bell
+
 import numpy as np
 
 # class to handle fractions
