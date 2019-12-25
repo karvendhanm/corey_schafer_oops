@@ -32,6 +32,14 @@ class DelimFile(WriteFile):
         super().__init__(file_name)
 
     def write(self, input):
+
         input = self.delimiter.join(input)
         super().write_lines(input)
+
+
+
+
+
+
+
 
