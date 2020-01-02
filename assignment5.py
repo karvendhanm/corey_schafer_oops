@@ -1,5 +1,6 @@
 # writing a class that inherits from a dictionary
 import os
+import pickle
 
 class ConfigKeyError(Exception):
     def __init__(self, this, key):
@@ -11,28 +12,32 @@ class ConfigKeyError(Exception):
 
 
 class ConfigDict(dict):
-    def __init__(self, filename):
 
-        file_path, _ = os.path.split(os.path.abspath(filename))
-        if os.path.exists(file_path):
-            self._filename = filename
-        else:
-            raise FileNotFoundError('File path does not exist %s' % file_path)
+    config_directory = 'C:/Users/John/PycharmProjects/corey_schafer_oops/configs/'
 
+    def __init__(self, config_name):
+
+        self._filename = ConfigDict.config_directory + config_name + '.pickle'
         if os.path.isfile(self._filename):
-            with open(self._filename) as fh:
-                for line in fh:
-                    line = line.rstrip()
-                    key, value = line.split('=', 1)
-                    dict.__setitem__(self, key, value)
+            with open(self._filename, 'rb') as fh:
+                pkl = pickle.load(fh)
+                # for key, value in pkl.items():
+                #     dict.__setitem__(self, key, value)
+                # since the object 'pkl' is a dictionary we can just use 'update' instead of the above 2 lines of code
+                self.update(pkl)
+
+        else:
+            with open(self._filename, 'wb') as fh:
+                pickle.dump({}, fh)
+
 
     def __setitem__(self, key, value):
         # remember we can't use the code line immediately below as it will keep calling the __set__item recursively and error recursion depth exceeded will be thrown.
         # self[key] = value
         dict.__setitem__(self, key, value)
-        with open(self._filename, 'w') as fh:
-            for key, value in self.items():
-                fh.write(f'{key}={value}\n')
+        with open(self._filename, 'wb') as fh:
+            pickle.dump(dict(self), fh)
+
 
     def __getitem__(self, item):
         if not item in self:

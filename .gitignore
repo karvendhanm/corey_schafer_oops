@@ -3,3 +3,5 @@ temp.py
 __pycache__
 sample.txt
 data
+configs
+.ipynb_checkpoints
